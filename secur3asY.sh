@@ -21,3 +21,4 @@ else    echo "\033[31;1m[!] \033[0;1mRessource manquante : \033[31;1mcheck_depen
         exit 1
 fi
 
+
