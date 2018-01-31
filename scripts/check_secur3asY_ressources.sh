@@ -2,7 +2,7 @@
 
 # @author : 		Aastrom
 # @lastUpdate :		2018-01-29
-# @role :		Initialisation de l'infrastructure de secur3asY
+# @role :			Initialisation de l'infrastructure de secur3asY
 
 ACTUAL_PATH="$(pwd)"
 CONF_PATH="$ACTUAL_PATH/conf"
@@ -34,8 +34,6 @@ then
 	}> "$SECUR3ASY_CONF_PATH"
 fi
 
-#shellcheck disable=SC1091
-#shellcheck source=conf/secur3asY.conf
 . "$SECUR3ASY_CONF_PATH"
 
 if [ ! -d "$SECUR3ASY_PATH" ]
@@ -52,7 +50,7 @@ then
 			then
 					NEW_SECUR3ASY_PATH=$CHOSEN_PATH/secur3asY
                 	dialog --title "Confirmation du choix du répertoire d'installation de secur3asY" --clear \
-                	   		--yesno "Confirmer l'installation de secur3asY dans le répertoire : $NEW_SECUR3ASY_PATH" 0 0
+                	   		--yesno "\\nConfirmer l'installation de secur3asY dans le répertoire : $NEW_SECUR3ASY_PATH" 0 0
             		case $? in
 						0)  clear
 							NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
@@ -79,7 +77,7 @@ then
                     esac
             else
                     dialog --title "Erreur lors de la saisie du répertoire d'installation" --clear \
-					--msgbox "Le répertoire renseigné n'existe pas.\\n\\nVeuillez réessayer." 0 0
+					--msgbox "\\nLe répertoire renseigné n'existe pas.\\n\\nVeuillez réessayer." 0 0
 					exit 1
             fi;;
 	esac
@@ -96,6 +94,7 @@ then
 	chmod -R 770 "$SECUR3ASY_PATH"
 	cp -R conf "$SECUR3ASY_PATH"
 	cp -R scripts "$SECUR3ASY_PATH"
+	cp secur3asY.sh "$SECUR3ASY_PATH"
 else
 	if [ ! -d "$CACHE_PATH" ]
 	then 	mkdir -p "$CACHE_PATH"

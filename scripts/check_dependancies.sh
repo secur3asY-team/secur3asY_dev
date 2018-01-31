@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# @author :		Aastrom
+# @author :			Aastrom
 # @lastUpdate : 	2018-01-29
-# @role :		Vérification des dépendances de secur3asY
+# @role :			Vérification des dépendances de secur3asY
 
 check_dependancy () {
         test=$(dpkg -l|grep "ii  $1 "|awk '{ print $2 }')
@@ -19,7 +19,7 @@ grep "deb http://http.kali.org/kali kali-rolling main contrib non-free" /etc/apt
 
 if [ $? -ne 0 ]
 then
-	dialog --title "Ajout des dépôts kali-rolling aux sources APT" \
+	dialog --title "Ajout des dépôts kali-rolling aux sources APT" --clear \
 	--yesno "\\nsecur3asY a besoin des dépôts kali-rolling pour trouver ses dépendances.\\n\\nAccepter l'ajout d'une ligne à etc/apt/sources.list ?" 0 0
 	case $? in
 		0) 	printf "\\ndeb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
@@ -53,12 +53,12 @@ then
 				--infobox "\\nVeuillez patienter lors de la mise à jour des paquets APT..." 0 0
 				if [ $? -eq 0 ]
 				then 	for packet in "${!needed_packets[@]}" ; do
-							apt -y install ${needed_packets[$packet]} > /dev/null 2>&1 |dialog --title "Installation des dépendances de secur3asY" \
+							apt -y install ${needed_packets[$packet]} > /dev/null 2>&1 |dialog --title "Installation des dépendances de secur3asY" --clear \
 							--infobox "\\nInstallation de ${needed_packets[$packet]}. Veuillez patienter..." 0 0
 						done
 						if [ $? -eq 0 ]
 						then	dialog --title "Réussite de l'installation des dépendances" --clear \
-								--msgbox "\\Les dépendances de secur3asY ont été installées avec succès." 0 0
+								--msgbox "\\nLes dépendances de secur3asY ont été installées avec succès." 0 0
 								clear
 								exit 0
 						else	dialog --title "Echec de l'installation des dépendances" --clear \
