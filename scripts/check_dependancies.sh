@@ -55,9 +55,8 @@ then
 						--infobox "\\nVeuillez patienter lors de la mise à jour des paquets APT..." 0 0
 						if [ $? -eq 0 ]
 						then 	
-								for packet in "${!needed_packets[@]}" ; 
-								do
-										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1 |dialog --title "Installation des dépendances de secur3asY" --clear \
+								for packet in "${!needed_packets[@]}" ; do
+										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1 |dialog --title "Installation des dépendances de secur3asY" \
 										--infobox "\\nInstallation de ${needed_packets[$packet]}. Veuillez patienter..." 0 0
 								done
 								if [ $? -eq 0 ]
