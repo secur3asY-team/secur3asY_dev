@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # @author :			Aastrom
-# @lastUpdate : 	2018-01-31
+# @lastUpdate : 		2018-01-31
 # @role :			Vérification des dépendances de secur3asY
 
 check_dependancy () {
