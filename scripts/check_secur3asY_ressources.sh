@@ -45,11 +45,11 @@ fi
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
 		printf "[${text_red}x${text_default}] secur3asY n'est pas installé sur le système.\r\n\r\n"
-		printf "[${text_yellow}-${text_default}] Répertoire d'installation par défaut : $SECUR3ASY_PATH\n"
+		printf "[${text_yellow}-${text_default}] Répertoire d'installation par défaut : $SECUR3ASY_PATH\r\n\r\n"
 		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ? [O/n]"
 		read -p " " choice1
 		case $choice1 in
-				'O')		printf "\n[${text_green}+${text_default}] Répertoire d'installation de secur3asY par défaut : $SECUR3ASY_PATH\n";;
+				'O')		printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $SECUR3ASY_PATH\n";;
 				'N')		printf "[${text_yellow}?${text_default}] Veuillez renseigner le répertoire d'installation de secur3asY :" 
 							read -p " " choice1
 							if [ -d "$CHOSEN_PATH" ]

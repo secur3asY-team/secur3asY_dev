@@ -57,13 +57,13 @@ then
 		printf "[${text_yellow}?${text_default}] Accepter l'installation automatique des dépendances ?" 
 		read -p " " choice2
 		case $choice2 in 
-				'O')	printf "[${text_yellow}-${text_default}] Mise à jour de la liste des paquets APT... "
+				'O')	printf "\n[${text_yellow}-${text_default}] Mise à jour de la liste des paquets APT... "
 						apt -y update > /dev/null 2>&1
 						if [ $? -eq 0 ]
 						then
 								printf "${text_green}OK${text_default}\n"
 								for packet in "${!needed_packets[@]}" ; do
-										printf "[${text_yellow}+${text_default}] Installation de ${needed_packets[$packet]}... "
+										printf "[${text_green}+${text_default}] Installation de ${needed_packets[$packet]}... "
 										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1
 										if [ $? -eq 0 ]
 										then 	printf "${text_green}OK${text_default}\n" 
