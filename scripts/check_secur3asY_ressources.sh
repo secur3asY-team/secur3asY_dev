@@ -45,7 +45,7 @@ fi
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
 		printf "[${text_red}x${text_default}] secur3asY n'est pas installé sur le système.\r\n\r\n"
-		printf "-----------------------------------------------------------------------------------\r\n"
+		printf " ----------------------------------------------------------------------------------- \r\n"
 		printf "[${text_blue}i${text_default}] Répertoire par défaut d'installation : $SECUR3ASY_PATH\n"
 		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ? [O/n]"
 		read -p " " choice1
