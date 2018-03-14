@@ -45,11 +45,11 @@ fi
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
 		printf "[${text_red}x${text_default}] secur3asY n'est pas installé sur le système.\r\n\r\n"
-		printf "[${text_yellow}-${text_default}] Répertoire d'installation par défaut : $SECUR3ASY_PATH\r\n\r\n"
+		printf "[${text_yellow}-${text_default}] Répertoire d'installation par défaut : $SECUR3ASY_PATH\n"
 		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ? [O/n]"
 		read -p " " choice1
 		case $choice1 in
-				'O')		printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $SECUR3ASY_PATH\n";;
+				'O')		printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $SECUR3ASY_PATH\r\n\r\n";;
 				'N')		printf "[${text_yellow}?${text_default}] Veuillez renseigner le répertoire d'installation de secur3asY :" 
 							read -p " " choice1
 							if [ -d "$CHOSEN_PATH" ]
@@ -61,7 +61,7 @@ then
 									'O')  NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
 										NEW_LOG_PATH=$NEW_CACHE_PATH/log
 										NEW_REPORT_PATH=$NEW_CACHE_PATH/report
-										printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $NEW_SECUR3ASY_PATH\n"
+										printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $NEW_SECUR3ASY_PATH\r\n\r\n"
 										cp $SECUR3ASY_CONF_PATH $CONF_PATH/default.conf
 										{ 
 											printf "# --- secur3asy current configuration file ---\\r\\n";
