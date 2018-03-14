@@ -45,8 +45,8 @@ fi
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
 		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ?\n"
-		printf "[${text_yellow}-${text_default}] Répertoire actuel : $SECUR3ASY_PATH\n"
-		printf "[${text_yellow}-${text_default}]" 
+		printf "    Répertoire actuel : $SECUR3ASY_PATH\n"
+		printf "[${text_yellow}-${text_default}] " 
 		read -p "([O]ui/[N]on) : " choice1
 		case $choice1 in
 				'O')		printf "\n[${text_green}+${text_default}] Répertoire d'installation de secur3asY par défaut : $SECUR3ASY_PATH\n";;
