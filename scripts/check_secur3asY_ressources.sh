@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 # @author : 		Aastrom
 # @lastUpdate :		2018-01-31
 # @role :			Initialisation de l'infrastructure de secur3asY
+
+text_default="\033[0m"
+text_red="\033[31;1m"
+text_green="\033[32;1m"
+text_blue="\033[33;1m"
+text_yellow="\033[34;1m"
 
 ACTUAL_PATH="$(pwd)"
 CONF_PATH="$ACTUAL_PATH/conf"
@@ -38,25 +44,24 @@ fi
 
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
-		dialog --title "Choix du répertoire d'installation de secur3asY" \
-		--yesno "\\nVoulez-vous utiliser le répertoire par défaut défini pour secur3asY ?\\n\\nRépertoire actuel : $SECUR3ASY_PATH" 0 0
-		case $? in
-				0)		echo "Répertoire d'installation de secur3asY par défaut : $SECUR3ASY_PATH";;
-				1)		exec 3>&1
-						CHOSEN_PATH=$(dialog --title "Modification du répertoire d'installation de secur3asY" --clear \
-						--inputbox "\\nVeuillez renseigner le répertoire d'installation de secur3asY :\\n\\n" 0 0 2>&1 1>&3)
-						exec 3>&-
-						if [ -d "$CHOSEN_PATH" ]
-						then
-								NEW_SECUR3ASY_PATH=$CHOSEN_PATH/secur3asY
-								dialog --title "Confirmation du choix du répertoire d'installation de secur3asY" --clear \
-										--yesno "\\nConfirmer l'installation de secur3asY dans le répertoire : $NEW_SECUR3ASY_PATH" 0 0
-								case $? in
-									0)  clear
-										NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
+		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ?\n"
+		printf "[${text_yellow}-${text_default}] Répertoire actuel : $SECUR3ASY_PATH\n"
+		printf "[${text_yellow}-${text_default}]" 
+		read -p "([O]ui/[N]on) : " choice1
+		case $choice1 in
+				'O')		printf "\n[${text_green}+${text_default}] Répertoire d'installation de secur3asY par défaut : $SECUR3ASY_PATH\n";;
+				'N')		printf "[${text_yellow}-${text_default}] Veuillez renseigner le répertoire d'installation de secur3asY :" 
+							read -p " " choice1
+							if [ -d "$CHOSEN_PATH" ]
+							then
+									NEW_SECUR3ASY_PATH=$CHOSEN_PATH/secur3asY
+									printf "[${text_yellow}-${text_default}] Confirmer l'installation de secur3asY dans le répertoire $NEW_SECUR3ASY_PATH : " 
+									read -p "([O]ui/[N]on) " choice2
+									case $choice2 in
+									'O')  NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
 										NEW_LOG_PATH=$NEW_CACHE_PATH/log
 										NEW_REPORT_PATH=$NEW_CACHE_PATH/report
-										echo "Répertoire d'installation de secur3asY : $NEW_SECUR3ASY_PATH"
+										printf "[${text_green}+${text_default}] Répertoire d'installation de secur3asY : $NEW_SECUR3ASY_PATH\n"
 										cp $SECUR3ASY_CONF_PATH $CONF_PATH/default.conf
 										{ 
 											printf "# --- secur3asy current configuration file ---\\r\\n";
@@ -71,13 +76,12 @@ then
 											printf "REPORT_PATH=%s" $NEW_REPORT_PATH
 										}> "$SECUR3ASY_CONF_PATH";;
 
-									1)  clear
-										echo "Veuillez réessayer."
-										exit 1;;
+									'N')  printf "[${text_red}x${text_default}] Veuillez réessayer.\n"
+										  exit 1;;
 								esac
 						else
-								dialog --title "Erreur lors de la saisie du répertoire d'installation" --clear \
-								--msgbox "\\nLe répertoire renseigné n'existe pas.\\n\\nVeuillez réessayer." 0 0
+								printf "[${text_red}x${text_default}] Le répertoire renseigné n'existe pas.\n"
+								printf "[${text_red}-${text_default}] Veuillez réessayer.\n"
 								exit 1
 						fi;;
 		esac
