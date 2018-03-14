@@ -7,8 +7,8 @@
 text_default="\033[0m"
 text_red="\033[31;1m"
 text_green="\033[32;1m"
-text_blue="\033[33;1m"
-text_yellow="\033[34;1m"
+text_yellow="\033[33;1m"
+text_blue="\033[34;1m"
 
 check_dependancy () {
         test=$(dpkg -l|grep "ii  $1 "|awk '{ print $2 }')
