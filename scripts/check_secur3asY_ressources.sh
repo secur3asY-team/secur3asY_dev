@@ -44,19 +44,20 @@ fi
 
 if [ ! -d "$SECUR3ASY_PATH" ]
 then
-		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ?\n"
-		printf "    Répertoire actuel : $SECUR3ASY_PATH\n"
-		printf "[${text_yellow}-${text_default}] " 
-		read -p "([O]ui/[N]on) : " choice1
+		printf "[${text_red}x${text_default}] secur3asY n'est pas installé sur le système.\r\n\r\n"
+		printf "-----------------------------------------------------------------------------------\r\n"
+		printf "[${text_blue}i${text_default}] Répertoire par défaut d'installation : $SECUR3ASY_PATH\n"
+		printf "[${text_yellow}?${text_default}] Voulez-vous utiliser le répertoire par défaut défini pour secur3asY ? [O/n]"
+		read -p " " choice1
 		case $choice1 in
 				'O')		printf "\n[${text_green}+${text_default}] Répertoire d'installation de secur3asY par défaut : $SECUR3ASY_PATH\n";;
-				'N')		printf "[${text_yellow}-${text_default}] Veuillez renseigner le répertoire d'installation de secur3asY :" 
+				'N')		printf "[${text_yellow}?${text_default}] Veuillez renseigner le répertoire d'installation de secur3asY :" 
 							read -p " " choice1
 							if [ -d "$CHOSEN_PATH" ]
 							then
 									NEW_SECUR3ASY_PATH=$CHOSEN_PATH/secur3asY
 									printf "[${text_yellow}-${text_default}] Confirmer l'installation de secur3asY dans le répertoire $NEW_SECUR3ASY_PATH : " 
-									read -p "([O]ui/[N]on) " choice2
+									read -p "[O/n] " choice2
 									case $choice2 in
 									'O')  NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
 										NEW_LOG_PATH=$NEW_CACHE_PATH/log
