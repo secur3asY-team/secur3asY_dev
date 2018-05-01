@@ -43,6 +43,8 @@ then
 		esac
 fi
 
+printf "Checking dependancies... "
+
 for dependancy in "${!dependancies[@]}" ; 
 do
 		check_dependancy ${dependancies[$dependancy]}
@@ -53,14 +55,14 @@ done
 
 if [ ${#needed_packets[*]} -ne 0 ]
 then
-		printf "[${text_yellow}-${text_default}] secur3asY needs the following dependancies :\n"
+		printf "\\n[${text_yellow}-${text_default}] secur3asY needs the following dependancies :\n"
 		echo "     ${needed_packets[*]}"
 
 		printf "[${text_yellow}?${text_default}] Do you accept to automatically install dependancies ?" 
 		read -p " " choice2
 		case $choice2 in 
 				'O'|'o'|'y'|'Y')	
-						printf "\n[${text_yellow}-${text_default}] Updating APT packets list... "
+						printf "\n[${text_green}+${text_default}] Updating APT packets list... "
 						apt -y update > /dev/null 2>&1
 						if [ $? -eq 0 ]
 						then
@@ -85,6 +87,9 @@ then
 
 				'N'|'n')	
 						printf "[${text_red}x${text_default}] secur3asY dependancies not allowed to be installed.\n"
+						echo
 						exit 1;;
 		esac
+else
+	printf "${text_green}OK${text_default}\\n"
 fi

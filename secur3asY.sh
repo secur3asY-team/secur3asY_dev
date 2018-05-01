@@ -26,8 +26,7 @@ printf ${text_default}
 echo
 
 if [ "$(id -u)" != 0 ]
-then 	
-		printf "[${text_red}!${text_default}] Please launch secur3asY as root.\n"
+then 	printf "[${text_red}!${text_default}] Please launch secur3asY as root.\n"
 		exit 1
 else
 
@@ -38,19 +37,31 @@ else
 	fi
 
 	if [ -e "scripts/check_secur3asY_ressources.sh" ]
-	then	
-			bash scripts/check_secur3asY_ressources.sh
-	else	
-			printf "[${text_red}!${text_default}] Missing ressource : check_secur3asY_ressources.sh.\n"
+	then	bash scripts/check_secur3asY_ressources.sh
+	else	printf "[${text_red}!${text_default}] Missing ressource : check_secur3asY_ressources.sh.\n"
 			printf "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
 			exit 1
 	fi
 
-	if [ -f "scripts/check_dependancies.sh" ]
+	if [ -e "scripts/check_dependancies.sh" ]
 	then	bash scripts/check_dependancies.sh
 	else    printf "[${text_red}!${text_default}] Missing ressource : check_dependancies.sh.\n"
         	printf "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
         	exit 1
+	fi
+
+	if [ -e "scripts/check_interfaces.sh" ]
+	then	bash scripts/check_interfaces.sh
+	else	printf "[${text_red}!${text_default}] Missing ressource : check_interfaces.sh.\n"
+            printf "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+			exit 1
+	fi
+
+	if [ -e "scripts/menu.sh" ]
+	then    bash scripts/menu.sh
+	else    printf "[${text_red}!${text_default}] Missing ressource : menu.sh.\n"
+			printf "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+			exit 1
 	fi
 	exit 0
 fi
