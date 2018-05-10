@@ -133,7 +133,7 @@ then
 		fi
 
 		write_well_without_return "Copying secur3asY files... "
-		cp -R conf "$SECUR3ASY_PATH" && cp -R scripts "$SECUR3ASY_PATH" && cp -R custom "$SECUR3ASY_PATH" && cp secur3asY.sh "$SECUR3ASY_PATH"
+		cp -R conf "$SECUR3ASY_PATH" && cp -R scripts "$SECUR3ASY_PATH" && cp secur3asY.sh "$SECUR3ASY_PATH"
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"

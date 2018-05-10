@@ -22,7 +22,7 @@ text_blue="\033[34;1m"
 write_well () {
 		for i in $(seq 1 ${#1});
 		do		printf "$(printf "$1"|cut -c$i)"
-				sleep .006
+				sleep .005
 		done
 		printf "\\n"
 
@@ -43,6 +43,7 @@ echo
 
 if [ "$(id -u)" != 0 ]
 then 	write_well "[${text_red}!${text_default}] Please launch secur3asY as root.\n"
+		sleep 1
 		exit 1
 else
 
