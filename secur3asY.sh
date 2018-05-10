@@ -83,12 +83,12 @@ else
 			exit 1
 	fi
 
-	if [ -e "$scripts_path/menu.sh" ]
-	then    bash $scripts_path/menu.sh
+	if [ -e "$scripts_path/secur3asY_menu.sh" ]
+	then    bash $scripts_path/secur3asY_menu.sh
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
-	else    write_well "[${text_red}!${text_default}] Missing ressource : menu.sh.\n"
+	else    write_well "[${text_red}!${text_default}] Missing ressource : secur3asY_menu.sh.\n"
 			write_well "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
 			exit 1
 	fi

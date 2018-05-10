@@ -13,10 +13,17 @@ text_blue="\033[34;1m"
 
 write_well () {
 		for i in $(seq 1 ${#1});
-		do		printf "$(printf "$1"|cut -c$i)"
-				sleep .006
+		do		character=$(printf "$1"|cut -c$i)
+                printf "$character"
+                if [ "$character" == "." ]
+                then    sleep .015
+                elif [ "$character" == "," ]
+                then    sleep .01
+                else    sleep .005
+                fi
 		done
 		printf "\\n"
+
 }
 
 write_well_without_return () {

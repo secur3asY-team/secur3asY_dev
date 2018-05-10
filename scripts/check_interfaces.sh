@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # @author :			Aastrom & Tachon
-# @lastUpdate :     2018-05-01
+# @lastUpdate :     2018-05-10
 # @role :			Check secur3asY host interfaces
 
 text_default="\033[0m"
@@ -13,8 +13,14 @@ text_blue="\033[34;1m"
 
 write_well () {
 		for i in $(seq 1 ${#1});
-		do		printf "$(printf "$1"|cut -c$i)"
-				sleep .006
+		do		character=$(printf "$1"|cut -c$i)
+                printf "$character"
+                if [ "$character" == "." ]
+                then    sleep .015
+                elif [ "$character" == "," ]
+                then    sleep .01
+                else    sleep .005
+                fi
 		done
 		printf "\\n"
 
@@ -90,3 +96,5 @@ do
 	printf "\r\n"
 	i=$((i+1))
 done
+echo "----------------------------------------------------"
+echo
