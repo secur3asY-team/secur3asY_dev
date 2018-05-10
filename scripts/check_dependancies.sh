@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # @author :			Aastrom
-# @lastUpdate :     2018-03-22
+# @lastUpdate :     2018-05-11
 # @role :			Check secur3asY dependancies
 
 text_default="\033[0m"

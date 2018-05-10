@@ -65,9 +65,20 @@ write_well_without_return "[${text_yellow}?${text_default}]  What do you want to
 read -p " " choice
 case $choice in
     1|'1'|"1"|"WLAN Intruder"|"wlan"|"wlan intruder")
+        echo
+        write_well_without_return "[${text_green}+${text_default}]  Loading WLAN Intruder attack process... "
+        sleep 1
+        write_well "${text_green}OK${text_default}\\n"
+        sleep .5
         bash scripts/wlan_intruder.sh;;
     2|'2'|"2"|"Rogue AP"|"rogue"|"rogue ap")
+        echo
+        write_well_without_return "[${text_green}+${text_default}]  Loading Rogue AP attack process... "
+        sleep 1
+        write_well "${text_green}OK${text_default}\\n"
+        sleep .5
         bash scripts/rogue_ap.sh;;
     3|'3'|"3"|"Quit"|"quit"|"exit"|'q'|"q"|'Q'|"Q")
+        echo
         break;;
 esac
