@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# @author :			Antoine HENRY
+# @author :			Aastrom
 # @lastUpdate :     2018-03-22
 # @role :			Check secur3asY dependancies
 
 text_default="\033[0m"
+text_bold="\033[1m"
 text_red="\033[31;1m"
 text_green="\033[32;1m"
 text_yellow="\033[33;1m"
@@ -18,32 +19,67 @@ check_dependancy () {
         fi
 }
 
-declare -a dependancies=(aircrack-ng crunch ettercap-common metasploit-framework postgresql)
+write_well () {
+		for i in $(seq 1 ${#1});
+		do		printf "$(printf "$1"|cut -c$i)"
+				sleep .006
+		done
+		printf "\\n"
+
+}
+
+write_well_without_return () {
+		for i in $(seq 1 ${#1});
+		do		printf "$(printf "$1"|cut -c$i)"
+				sleep .002
+		done
+}
+
+declare -a dependancies=(aircrack-ng crunch ettercap-common metasploit-framework net-tools)
 declare -a needed_packets
+
+write_well_without_return "Checking repositories... "
 
 grep "deb http://http.kali.org/kali kali-rolling main contrib non-free" /etc/apt/sources.list > /dev/null 2>&1
 
 if [ $? -ne 0 ]
 then
-		printf "[${text_yellow}-${text_default}] secur3asY needs kali-rolling repositories to find its dependancies.\n"
-		printf "[${text_yellow}?${text_default}] Do you accept to add a line into etc/apt/sources.list ? [Y/n] :" 
+		write_well "${text_red}NOK${text_default}\\n"
+		echo
+		echo "----------------------------------------------------"
+		echo
+		write_well "       ${text_red}[ --- secur3asY repositories --- ]${text_default}\\n"
+		echo
+		write_well "[${text_blue}i${text_default}] secur3asY needs kali-rolling repositories to find its dependancies.\n"
+		write_well_without_return "[${text_yellow}?${text_default}] Add a line into /etc/apt/sources.list ? [Y/n] :" 
 		read -p " " choice1
 		printf "\n"
 		case $choice1 in
 				'O'|'o'|'y'|'Y') 
 						echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> "/etc/apt/sources.list"
 						if [ $? -ne 0 ]
-						then 	printf "[${text_red}x${text_default}] Unable to add a line into /etc/apt/sources.list.\n"
-						exit 1
+						then 	write_well "[${text_red}x${text_default}] Unable to add a line into /etc/apt/sources.list.\n"
+								echo
+								echo "----------------------------------------------------"
+								echo
+								exit 1
+						else 	write_well "[${text_green}+${text_default}] Line added into /etc/apt/sources.list.\\n"
+								echo
+								echo "----------------------------------------------------"
+								echo
 						fi;;
 
 				'N'|'n')	
-						printf "[${text_red}x${text_default}] Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
+						write_well "[${text_red}x${text_default}] Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
+						echo
+						echo "----------------------------------------------------"
+						echo
 						exit 1;;	
 		esac
+else	write_well "${text_green}OK${text_default}\\n"
 fi
 
-printf "Checking dependancies... "
+write_well_without_return "Checking dependancies... "
 
 for dependancy in "${!dependancies[@]}" ; 
 do
@@ -55,41 +91,58 @@ done
 
 if [ ${#needed_packets[*]} -ne 0 ]
 then
-		printf "\\n[${text_yellow}-${text_default}] secur3asY needs the following dependancies :\n"
-		echo "     ${needed_packets[*]}"
-
-		printf "[${text_yellow}?${text_default}] Do you accept to automatically install dependancies ?" 
+		write_well "${text_red}NOK${text_default}\\n"
+		echo
+		echo "----------------------------------------------------"
+		echo
+		write_well "       ${text_red}[ --- secur3asY dependancies --- ]${text_default}\\n"
+		echo
+		write_well "[${text_red}x${text_default}] secur3asY needs the following dependancies :\n"
+		echo "    ${needed_packets[*]}"
+		echo
+		write_well_without_return "[${text_yellow}?${text_default}] Do you accept to automatically install dependancies ? [Y/n] :" 
 		read -p " " choice2
 		case $choice2 in 
 				'O'|'o'|'y'|'Y')	
-						printf "\n[${text_green}+${text_default}] Updating APT packets list... "
+						write_well_without_return "[${text_green}+${text_default}] Updating APT packets list... "
 						apt -y update > /dev/null 2>&1
 						if [ $? -eq 0 ]
 						then
-								printf "${text_green}OK${text_default}\n"
+								write_well "${text_green}OK${text_default}\n"
 								for packet in "${!needed_packets[@]}" ; do
-										printf "[${text_green}+${text_default}] ${needed_packets[$packet]} installation... "
+										write_well_without_return "[${text_green}+${text_default}] ${needed_packets[$packet]} installation... "
 										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1
 										if [ $? -eq 0 ]
-										then 	printf "${text_green}OK${text_default}\n" 
-										else 	printf "${text_red}NOK${text_default}\n"
-												printf "[${text_red}x${text_default}] Unable to install ${needed_packets[$packet]}. Please retry later.\n"
+										then 	write_well "${text_green}OK${text_default}\n" 
+										else 	write_well "${text_red}NOK${text_default}\n"
+												write_well "[${text_red}x${text_default}] Unable to install ${needed_packets[$packet]}. Please retry later.\n"
+												echo
+												echo "----------------------------------------------------"
+												echo
 												exit 1 
 										fi
 								done
-								printf "[${text_green}+${text_default}] secur3asy dependancies installation is a success !\n\n"
+								write_well "[${text_green}+${text_default}] secur3asY dependancies installation is a success !\\n"
 								sleep 2
+								echo
+								echo "----------------------------------------------------"
+								echo
 								exit 0
 						else	
-								printf "[${text_red}x${text_default}] Unable to update APT packets list.\n\n"
+								write_well "[${text_red}x${text_default}] Unable to update APT packets list.\n\n"
+								echo
+								echo "----------------------------------------------------"
+								echo
 								exit 1
 						fi;;
 
 				'N'|'n')	
-						printf "[${text_red}x${text_default}] secur3asY dependancies not allowed to be installed.\n"
+						write_well "[${text_red}x${text_default}] secur3asY dependancies not allowed to be installed.\n"
+						echo
+						echo "----------------------------------------------------"
 						echo
 						exit 1;;
 		esac
 else
-	printf "${text_green}OK${text_default}\\n"
+	write_well "${text_green}OK${text_default}\\n"
 fi

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# @author : 		Antoine HENRY
+# @author : 		Aastrom
 # @lastUpdate :		2018-03-22
 # @role :			Check secur3asY installation
 

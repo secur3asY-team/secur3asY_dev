@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# @author :			Melodie BERNARD, Antoine HENRY
+# @author :			Aastrom & Tachon
 # @lastUpdate :     2018-05-01
 # @role :			Check secur3asY host interfaces
 
