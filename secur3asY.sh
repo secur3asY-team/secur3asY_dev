@@ -8,6 +8,8 @@ clear
 
 secur3asY_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 scripts_path="$secur3asY_path/scripts"
+checks_path="$scripts_path/checks"
+attacks_path="$scripts_path/attacks"
 
 text_default="\033[0m"
 text_red="\033[31;1m"
@@ -47,8 +49,16 @@ else
 	then	mkdir -p $scripts_path
 	fi
 
-	if [ -e "$scripts_path/check_installation.sh" ]
-	then	bash $scripts_path/check_installation.sh
+	if [ -d "$checks_path" ]
+	then	mkdir -p $checks_path
+	fi
+
+	if [ -d "$attacks_path" ]
+	then	mkdir -p $attacks_path
+	fi
+
+	if [ -e "$checks_path/check_installation.sh" ]
+	then	bash $checks_path/check_installation.sh
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
@@ -57,8 +67,8 @@ else
 			exit 1
 	fi
 
-	if [ -e "$scripts_path/check_dependancies.sh" ]
-	then	bash $scripts_path/check_dependancies.sh
+	if [ -e "$checks_path/check_dependancies.sh" ]
+	then	bash $checks_path/check_dependancies.sh
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
@@ -67,8 +77,8 @@ else
         	exit 1
 	fi
 
-	if [ -e "$scripts_path/check_interfaces.sh" ]
-	then	bash $scripts_path/check_interfaces.sh
+	if [ -e "$checks_path/check_interfaces.sh" ]
+	then	bash $checks_path/check_interfaces.sh
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi

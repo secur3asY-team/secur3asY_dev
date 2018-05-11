@@ -66,7 +66,7 @@ then
 fi
 
 # Load secur3asY configuration file and check installation
-script_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd .. && pwd)"
+script_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 . "$SECUR3ASY_CONF_PATH"
 
 printf "Checking installation... "
@@ -89,20 +89,20 @@ then
 						echo		
 						write_well "[${text_green}+${text_default}] secur3asY installation folder : $SECUR3ASY_PATH\\n";;
 				'N'|'n')
-						write_well "[${text_yellow}?${text_default}] Please type secur3asY installation folder location :" 
+						printf "[${text_yellow}?${text_default}] Please type secur3asY installation folder location :" 
 						read -p " " CHOSEN_PATH
 						if [ -d "$CHOSEN_PATH" ]
 						then
 								NEW_SECUR3ASY_PATH=$CHOSEN_PATH/secur3asY
-								write_well "[${text_yellow}-${text_default}] Please confirm secur3asY installation folder $NEW_SECUR3ASY_PATH : " 
-								read -p "[Y/n] " choice2
+								write_well "[${text_yellow}-${text_default}] Please confirm secur3asY installation folder $NEW_SECUR3ASY_PATH. [Y/n] :" 
+								read -p " " choice2
 								case $choice2 in
 								'O'|'o'|'y'|'Y')  
 										NEW_CACHE_PATH=$NEW_SECUR3ASY_PATH/cache
 										NEW_LOG_PATH=$NEW_CACHE_PATH/log
 										NEW_REPORT_PATH=$NEW_CACHE_PATH/report
 										echo
-										write_well "[${text_green}+${text_default}] secur3asY installation folder : $NEW_SECUR3ASY_PATH\r\n\r\n"
+										write_well "[${text_green}+${text_default}] secur3asY installation folder : $NEW_SECUR3ASY_PATH\\n"
 										cp $SECUR3ASY_CONF_PATH $CONF_PATH/default.conf
 										{
 											printf "# --- secur3asY current configuration file ---\\r\\n";
@@ -118,12 +118,12 @@ then
 										}> "$SECUR3ASY_CONF_PATH";;
 
 									'N'|'n')  
-											write_well "[${text_red}x${text_default}] Please retry later.\n"
+											write_well "[${text_red}x${text_default}] Please retry later.\\n"
 										  	exit 1;;
 								esac
 						else
-								write_well "[${text_red}x${text_default}] Expected directory does not exist.\n"
-								write_well "[${text_red}-${text_default}] Please retry later.\n"
+								write_well "[${text_red}x${text_default}] Expected directory does not exist.\\n"
+								write_well "[${text_red}-${text_default}] Please retry later.\\n"
 								exit 1
 						fi;;
 		esac

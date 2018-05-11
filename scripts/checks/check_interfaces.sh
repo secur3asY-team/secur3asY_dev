@@ -56,9 +56,7 @@ then	write_well "${text_green}OK${text_default}\\n"
 else	write_well "${text_red}NOK${text_default}\\n"
 		exit 1
 fi
-echo
-echo "----------------------------------------------------"
-echo
+
 i=0
 
 # Print then stores IP, MAC, and type of each interface founded just before 
@@ -84,17 +82,5 @@ do
 		printf "mac_address=%s\\n" ${macs[$i]};
 		echo
 	} >> conf/network.conf 
-	if [ "${ips[$i]}" != "" ]
-	then	
-		printf "[${text_green}ON${text_default}]  Interface : ${text_bold}$interface${text_default} (${interfaces_types[$i]})\n"
-		printf "      IP address : ${text_green}${ips[$i]}${text_default}\n"
-		printf "      MAC address : ${macs[$i]}\n"
-	else
-		printf "[${text_red}OFF${text_default}]  Interface : ${text_bold}$interface${text_default} (${interfaces_types[$i]})\n"
-		printf "       MAC address : ${macs[$i]}\n"
-	fi
-	printf "\r\n"
 	i=$((i+1))
 done
-echo "----------------------------------------------------"
-echo
