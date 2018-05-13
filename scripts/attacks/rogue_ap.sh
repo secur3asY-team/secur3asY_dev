@@ -64,7 +64,7 @@ write_well "[${text_green}-${text_default}]  Of course, it's possible ! ;)\\n"
 sleep .5
 echo
 bash $checks_location/check_interfaces.sh
+$checks_location/check_rogue_interfaces
 echo
-python3 $checks_location/check_rogue_interfaces.py
 echo "----------------------------------------------------"
 exit 0

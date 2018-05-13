@@ -6,7 +6,7 @@
 
 clear
 
-secur3asY_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+secur3asY_path="$(dirname "$(readlink -f "$0")")"
 scripts_path="$secur3asY_path/scripts"
 checks_path="$scripts_path/checks"
 attacks_path="$scripts_path/attacks"

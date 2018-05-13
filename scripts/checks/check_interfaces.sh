@@ -11,6 +11,9 @@ text_green="\033[32;1m"
 text_yellow="\033[33;1m"
 text_blue="\033[34;1m"
 
+script_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+conf_location="$script_location/conf"
+
 write_well () {
 		for i in $(seq 1 ${#1});
 		do		character=$(printf "$1"|cut -c$i)
@@ -34,13 +37,13 @@ write_well_without_return () {
 }
 
 # Removes temporary file and creates the template
-if [ -e conf/network.conf ]
-then	rm conf/network.conf
+if [ -e "$conf_location/network.conf" ]
+then	rm "$conf_location/network.conf"
 fi
 {
 	printf "# --- secur3asy network configuration file ---\\n";
 	echo;
-} > conf/network.conf
+} > "$conf_location/network.conf"
 
 declare -a ips
 declare -a macs
@@ -81,6 +84,6 @@ do
 		printf "ip_address=%s\\n" ${ips[$i]};
 		printf "mac_address=%s\\n" ${macs[$i]};
 		echo
-	} >> conf/network.conf 
+	} >> "$conf_location/network.conf" 
 	i=$((i+1))
 done

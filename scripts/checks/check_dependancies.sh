@@ -41,7 +41,7 @@ write_well_without_return () {
 		done
 }
 
-declare -a dependancies=(aircrack-ng crunch ettercap-common metasploit-framework net-tools)
+declare -a dependancies=(aircrack-ng build-essential cython cython3 crunch ettercap-common libffi-dev:amd64 libssl-dev:amd64 metasploit-framework net-tools python3.7 python3.7-dev python3-pip)
 declare -a needed_packets
 
 write_well_without_return "Checking repositories... "
@@ -56,27 +56,27 @@ then
 		echo
 		write_well "       ${text_red}[ --- secur3asY repositories --- ]${text_default}\\n"
 		echo
-		write_well "[${text_blue}i${text_default}] secur3asY needs kali-rolling repositories to find its dependancies.\n"
-		write_well_without_return "[${text_yellow}?${text_default}] Add a line into /etc/apt/sources.list ? [Y/n] :" 
+		write_well "[${text_blue}i${text_default}]  secur3asY needs kali-rolling repositories to find its dependancies.\n"
+		write_well_without_return "[${text_yellow}?${text_default}]  Add a line into /etc/apt/sources.list ? [Y/n] :" 
 		read -p " " choice1
 		printf "\n"
 		case $choice1 in
 				'O'|'o'|'y'|'Y') 
 						echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> "/etc/apt/sources.list"
 						if [ $? -ne 0 ]
-						then 	write_well "[${text_red}x${text_default}] Unable to add a line into /etc/apt/sources.list.\n"
+						then 	write_well "[${text_red}x${text_default}]  Unable to add a line into /etc/apt/sources.list.\n"
 								echo
 								echo "----------------------------------------------------"
 								echo
 								exit 1
-						else 	write_well "[${text_green}+${text_default}] Line added into /etc/apt/sources.list.\\n"
+						else 	write_well "[${text_green}+${text_default}]  Line added into /etc/apt/sources.list.\\n"
 								echo
 								echo "----------------------------------------------------"
 								echo
 						fi;;
 
 				'N'|'n')	
-						write_well "[${text_red}x${text_default}] Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
+						write_well "[${text_red}x${text_default}]  Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
 						echo
 						echo "----------------------------------------------------"
 						echo
@@ -103,39 +103,39 @@ then
 		echo
 		write_well "       ${text_red}[ --- secur3asY dependancies --- ]${text_default}\\n"
 		echo
-		write_well "[${text_red}x${text_default}] secur3asY needs the following dependancies :\n"
-		echo "    ${needed_packets[*]}"
+		write_well "[${text_red}x${text_default}]  secur3asY needs the following dependancies :\n"
+		echo "     ${needed_packets[*]}"
 		echo
-		write_well_without_return "[${text_yellow}?${text_default}] Do you accept to automatically install dependancies ? [Y/n] :" 
+		write_well_without_return "[${text_yellow}?${text_default}]  Do you accept to automatically install dependancies ? [Y/n] :" 
 		read -p " " choice2
 		case $choice2 in 
 				'O'|'o'|'y'|'Y')	
-						write_well_without_return "[${text_green}+${text_default}] Updating APT packets list... "
+						write_well_without_return "[${text_green}+${text_default}]  Updating APT packets list... "
 						apt -y update > /dev/null 2>&1
 						if [ $? -eq 0 ]
 						then
 								write_well "${text_green}OK${text_default}\n"
 								for packet in "${!needed_packets[@]}" ; do
-										write_well_without_return "[${text_green}+${text_default}] ${needed_packets[$packet]} installation... "
+										write_well_without_return "[${text_green}+${text_default}]  ${needed_packets[$packet]} installation... "
 										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1
 										if [ $? -eq 0 ]
 										then 	write_well "${text_green}OK${text_default}\n" 
 										else 	write_well "${text_red}NOK${text_default}\n"
-												write_well "[${text_red}x${text_default}] Unable to install ${needed_packets[$packet]}. Please retry later.\n"
+												write_well "[${text_red}x${text_default}]  Unable to install ${needed_packets[$packet]}. Please retry later.\n"
 												echo
 												echo "----------------------------------------------------"
 												echo
 												exit 1 
 										fi
 								done
-								write_well "[${text_green}+${text_default}] secur3asY dependancies installation is a success !\\n"
+								write_well "[${text_green}+${text_default}]  secur3asY dependancies installation is a success !\\n"
 								sleep 2
 								echo
 								echo "----------------------------------------------------"
 								echo
 								exit 0
 						else	
-								write_well "[${text_red}x${text_default}] Unable to update APT packets list.\n\n"
+								write_well "[${text_red}x${text_default}]  Unable to update APT packets list.\n\n"
 								echo
 								echo "----------------------------------------------------"
 								echo
@@ -143,7 +143,7 @@ then
 						fi;;
 
 				'N'|'n')	
-						write_well "[${text_red}x${text_default}] secur3asY dependancies not allowed to be installed.\n"
+						write_well "[${text_red}x${text_default}]  secur3asY dependancies not allowed to be installed.\n"
 						echo
 						echo "----------------------------------------------------"
 						echo
