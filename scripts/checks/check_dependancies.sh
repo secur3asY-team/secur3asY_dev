@@ -41,49 +41,56 @@ write_well_without_return () {
 		done
 }
 
-declare -a dependancies=(aircrack-ng build-essential cython cython3 crunch ettercap-common libffi-dev:amd64 libssl-dev:amd64 metasploit-framework net-tools python3.7 python3.7-dev python3-pip)
+declare -a dependancies=(aircrack-ng crunch csvtool gcc net-tools python3 python3-dev python3-all-dev python3.5 python3.5-dev python3-pip)
 declare -a needed_packets
 
-write_well_without_return "Checking repositories... "
 
-grep "deb http://http.kali.org/kali kali-rolling main contrib non-free" /etc/apt/sources.list > /dev/null 2>&1
+# write_well_without_return "Checking repositories... "
 
-if [ $? -ne 0 ]
-then
-		write_well "${text_red}NOK${text_default}\\n"
-		echo
-		echo "----------------------------------------------------"
-		echo
-		write_well "       ${text_red}[ --- secur3asY repositories --- ]${text_default}\\n"
-		echo
-		write_well "[${text_blue}i${text_default}]  secur3asY needs kali-rolling repositories to find its dependancies.\n"
-		write_well_without_return "[${text_yellow}?${text_default}]  Add a line into /etc/apt/sources.list ? [Y/n] :" 
-		read -p " " choice1
-		printf "\n"
-		case $choice1 in
-				'O'|'o'|'y'|'Y') 
-						echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> "/etc/apt/sources.list"
-						if [ $? -ne 0 ]
-						then 	write_well "[${text_red}x${text_default}]  Unable to add a line into /etc/apt/sources.list.\n"
-								echo
-								echo "----------------------------------------------------"
-								echo
-								exit 1
-						else 	write_well "[${text_green}+${text_default}]  Line added into /etc/apt/sources.list.\\n"
-								echo
-								echo "----------------------------------------------------"
-								echo
-						fi;;
+# grep "deb http://http.kali.org/kali kali-rolling main contrib non-free" /etc/apt/sources.list > /dev/null 2>&1
 
-				'N'|'n')	
-						write_well "[${text_red}x${text_default}]  Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
-						echo
-						echo "----------------------------------------------------"
-						echo
-						exit 1;;	
-		esac
-else	write_well "${text_green}OK${text_default}\\n"
-fi
+# if [ $? -ne 0 ]
+# then
+# 		write_well "${text_red}NOK${text_default}\\n"
+# 		echo
+# 		echo "----------------------------------------------------"
+# 		echo
+# 		write_well "       ${text_red}[ --- secur3asY repositories --- ]${text_default}\\n"
+# 		echo
+# 		write_well "[${text_blue}i${text_default}]  secur3asY needs kali-rolling repositories to find its dependancies.\n"
+# 		write_well_without_return "[${text_yellow}?${text_default}]  Add a line into /etc/apt/sources.list ? [Y/n] :" 
+# 		read -p " " choice1
+# 		printf "\n"
+# 		case $choice1 in
+# 				'O'|'o'|'y'|'Y') 
+# 						echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> "/etc/apt/sources.list"
+# 						if [ $? -ne 0 ]
+# 						then 	write_well "[${text_red}x${text_default}]  Unable to add a line into /etc/apt/sources.list.\n"
+# 								echo
+# 								echo "----------------------------------------------------"
+# 								echo
+# 								exit 1
+# 						else 	write_well "[${text_green}+${text_default}]  Line added into /etc/apt/sources.list.\\n"
+# 								wget -q -O - https://archive.kali.org/archive-key.asc | apt-key add > /dev/null 2>&1
+# 								if [ $? -ne 0 ]
+# 								then	write_well "[${text_red}x${text_default}]  Unable to fetch and activate kali-rolling public key.\\n"
+# 										exit 1
+# 								else	write_well "[${text_green}+${text_default}]  Kali-rolling public key fetched and activated.\\n"
+# 								fi
+# 								echo
+# 								echo "----------------------------------------------------"
+# 								echo
+# 						fi;;
+
+# 				'N'|'n')	
+# 						write_well "[${text_red}x${text_default}]  Kali-rolling repositories not added to file /etc/apt/sources.list, as asked.\n"
+# 						echo
+# 						echo "----------------------------------------------------"
+# 						echo
+# 						exit 1;;	
+# 		esac
+# else	write_well "${text_green}OK${text_default}\\n"
+# fi
 
 write_well_without_return "Checking dependancies... "
 

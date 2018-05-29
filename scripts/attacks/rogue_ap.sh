@@ -49,15 +49,14 @@ echo '
                                                   '
 printf ${text_default}
 
-echo
-echo "----------------------------------------------------"
+echo "   ----------------------------------------------------"
 echo
 
 write_well "       ${text_red}[ --- secur3asY Rogue AP --- ]${text_default}\\n"
 echo
-write_well "[${text_yellow}?${text_default}]  Is it possible to usurpate an access point\\n"
+write_well "[${text_yellow}?${text_default}]  Is it possible to usurp an access point\\n"
 sleep .5
-write_well "     in order to process a man-in-the-middle attack ? ...\\n"
+write_well "     to process a man-in-the-middle attack ? ...\\n"
 sleep 1
 echo
 write_well "[${text_green}-${text_default}]  Of course, it's possible ! ;)\\n"
@@ -65,6 +64,7 @@ sleep .5
 echo
 bash $checks_location/check_interfaces.sh
 $checks_location/check_rogue_interfaces
+bash $checks_location/check_nearby_networks.sh
 echo
 echo "----------------------------------------------------"
 exit 0

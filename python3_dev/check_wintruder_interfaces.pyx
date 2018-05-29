@@ -20,6 +20,7 @@ current_path = os.path.abspath(os.path.dirname(sys.argv[0]))
 secur3asY_path = os.path.dirname(os.path.dirname(current_path))
 conf_path = secur3asY_path + "/conf"
 tmp_path = secur3asY_path + "/tmp"
+print(tmp_path)
 
 # @function:    read_config_file()
 # @role:        Reads network config file
@@ -56,7 +57,6 @@ def write_well(given_string):
         sys.exit(1)
 
 def write_well_without_return(given_string):
-
     try:
         for i in range(0,len(given_string)):
             sys.stdout.write(given_string[i])
@@ -71,16 +71,12 @@ def write_well_without_return(given_string):
         print("[\033[31;1mx\033[0;m]  Error : unable to write_well_without_return !\n")
         sys.exit(1)
 
-# @declares:        eth_connected, 
-#                   eth_disconnected,
-#                   wifi_connected,
+# @declares:        wifi_connected,
 #                   wifi_disconnected  
 #
 #   Initializes empty categories lists in order to store in 
 #   names of matching detected interfaces. 
 
-eth_connected = []
-eth_disconnected = []
 wifi_connected = []
 wifi_disconnected = []
 
@@ -97,9 +93,7 @@ time.sleep(.1)
 #
 # @stores:          section['interface_name']
 #
-# @appends into:    eth_connected, 
-#                   eth_disconnected,
-#                   wifi_connected,
+# @appends into:    wifi_connected,
 #                   wifi_disconnected
 #   
 #   Foreach interface section of interfaces configuration file, 
@@ -111,14 +105,12 @@ write_well_without_return("Detecting interfaces types and status... ")
 for interface_section in config.sections():
     try:
         section=config[interface_section]
-        if section['interface_type'] == "Ethernet" and section['interface_status'] == "off":
-            eth_disconnected.append(section['interface_name'])
-        elif section['interface_type'] == "Ethernet" and section['interface_status'] == "on":
-            eth_connected.append(section['interface_name'])
-        elif section['interface_type'] == "Wi-Fi" and section['interface_status'] == "off":
+        if section['interface_type'] == "Wi-Fi" and section['interface_status'] == "off":
             wifi_disconnected.append(section['interface_name'])
-        else:
+        elif section['interface_type'] == "Wi-Fi" and section['interface_status'] == "on":
             wifi_connected.append(section['interface_name'])
+        else:
+            pass
     except:
         print("\033[31;1mNOK\033[0m")
         print("[\033[31;1mx\033[0;m]  Error : unable to counting interfaces types and availabilities.")
@@ -127,9 +119,7 @@ for interface_section in config.sections():
 print("\033[32;1mOK\033[0m")
 time.sleep(.1)
 
-# @tests:       eth_connected, 
-#               eth_disconnected,
-#               wifi_connected,
+# @tests:       wifi_connected,
 #               wifi_disconnected
 #
 # @writes:      matching_interfaces_config.txt
@@ -143,22 +133,13 @@ result_file = open(tmp_path + "/matching_interfaces_config.txt","w")
 
 write_well_without_return("Detecting potential configurations... ")
 
-if len(eth_connected) >= 1 and len(wifi_connected) == 0 and len(wifi_disconnected) >= 1:
-    for eth in eth_connected:
-        for wifi in wifi_disconnected:
-                result_file.write(eth + ' ' + wifi)
-elif len(wifi_connected) >= 1 and len(wifi_disconnected) >= 1:
-    for wifi_c in wifi_connected:
-        for wifi_d in wifi_disconnected:
-                result_file.write(wifi_c + ' ' + wifi_d)
-elif (len(eth_connected) == 0 and len(wifi_connected) == 0) or (len(wifi_connected) >= 1 and len(wifi_disconnected) == 0) or (len(eth_connected) >= 1 and len(wifi_disconnected) == 0):  
-    print("\033[31;1mNOK\033[0m\n")
+if len(wifi_disconnected) >= 1:
+    for wifi in wifi_disconnected:
+        result_file.write(wifi)
+else: 
     print("[\033[31;1mx\033[0;m]  No possible configuration. Check your Internet")
     print("     connection and check if a Wi-Fi network card is available.")
     print("")
-    sys.exit(1)
-else:
-    print("\033[31;1mNOK\033[0m\n")
     sys.exit(1)
 
 result_file.close()
@@ -175,18 +156,16 @@ if nb_lines < 1:
     print("")
     sys.exit(1)
 elif nb_lines == 1:
-    interfaces = line.split( )
     matches.append(line)
     print("[\033[32;1m-\033[0;m]  I found a relevant configuration : ")
-    write_well("     " + interfaces[0] + " (Internet Source) / " + interfaces[1] + " (Wireless Monitoring and AP)")
+    write_well("     " + interfaces[0] + " (Wireless Monitoring and AP)")
     print("")
 
 else:
     print("[\033[32;1m-\033[0;m]  I found several relevant configurations : ")
     for line in matching_config:
         matches.append(line)
-        interfaces = line.split( )
-        write_well("     " + interfaces[0] + " (Internet Source) / " + interfaces[1] + " (Wireless Monitoring and AP)")
+        write_well("     " + interfaces[0] + " (Wireless Monitoring and AP)")
     print("")
 
 time.sleep(.1)

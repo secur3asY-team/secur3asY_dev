@@ -53,6 +53,7 @@ ACTUAL_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 ACTUAL_CONF_PATH="$ACTUAL_PATH/conf"
 ACTUAL_SCRIPTS_PATH="$ACTUAL_PATH/scripts"
 ACTUAL_SOURCES_PATH="$ACTUAL_PATH/sources"
+ACTUAL_TMP_PATH="$ACTUAL_PATH/tmp"
 SECUR3ASY_CONF_PATH="$ACTUAL_CONF_PATH/secur3asY.conf"
 
 # secur3asY configuration file generation for first install
@@ -69,6 +70,7 @@ then
 		CONF_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/conf
 		LOG_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/log
 		SCRIPTS_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/scripts
+		TMP_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/tmp
 		{ 
 				printf "# --- secur3asY default configuration file ---\\n";
 				echo;
@@ -79,6 +81,7 @@ then
 				printf "CONF_PATH=%s\\n" $CONF_DEFAULT_PATH;
 				printf "LOG_PATH=%s\\n" $LOG_DEFAULT_PATH;
 				printf "SCRIPTS_PATH=%s\\n" $SCRIPTS_DEFAULT_PATH;
+				printf "TMP_PATH=%s\\n" $TMP_DEFAULT_PATH;
 				echo
 		}> "$SECUR3ASY_CONF_PATH"
 fi
@@ -120,6 +123,7 @@ then
 										NEW_CONF_PATH=$NEW_SECUR3ASY_PATH/conf
 										NEW_LOG_PATH=$NEW_SECUR3ASY_PATH/log
 										NEW_SCRIPTS_PATH=$NEW_SECUR3ASY_PATH/scripts
+										NEW_TMP_PATH=$NEW_SECUR3ASY_PATH/tmp
 										echo
 										write_well "[${text_green}+${text_default}]  secur3asY installation folder : $NEW_SECUR3ASY_PATH\\n"
 										cp $SECUR3ASY_CONF_PATH $CONF_PATH/default.conf
@@ -131,7 +135,8 @@ then
 											printf "# Edit these lines to change manually cache folders location.\\n";
 											printf "CONF_PATH=%s" $NEW_CONF_PATH;
 											printf "LOG_PATH=%s" $NEW_LOG_PATH;
-											printf "SCRIPTS_PATH=%s" $NEW_SCRIPTS_PATH
+											printf "SCRIPTS_PATH=%s" $NEW_SCRIPTS_PATH;
+											printf "TMP_PATH=%s" $NEW_TMP_PATH
 										}> "$SECUR3ASY_CONF_PATH";;
 
 									'N'|'n')  
@@ -149,7 +154,7 @@ then
 
 		echo
 		write_well_without_return "Creating secur3asY folders... "
-		mkdir -p "$SECUR3ASY_PATH" && mkdir -p "$LOG_PATH" && chown -R root:root "$SECUR3ASY_PATH" && chmod -R 770 "$SECUR3ASY_PATH"
+		mkdir -p "$SECUR3ASY_PATH" && mkdir -p "$LOG_PATH" && mkdir "$TMP_PATH" && chown -R root:root "$SECUR3ASY_PATH" && chmod -R 770 "$SECUR3ASY_PATH"
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"
@@ -164,13 +169,19 @@ then
 				exit 1
 		fi
 
+		bash "$SCRIPTS_PATH/checks/check_dependancies.sh"
+
+		sleep .5
+
 		write_well_without_return "Compiling source-codes... "
-		gcc -Os -I /usr/include/python3.6m -o $SCRIPTS_PATH/checks/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c -lpython3.6m -lpthread -lm -lutil -ldl
+		gcc -Os -I /usr/include/python3.5m -o $SCRIPTS_PATH/checks/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c -lpython3.5m -lpthread -lm -lutil -ldl
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"
 				exit 1
 		fi
+
+		sleep .5
 
 		write_well_without_return "Linking secur3asY launcher... "
 		ln -s "$SECUR3ASY_PATH/secur3asY.sh" /usr/bin/secur3asY
@@ -179,6 +190,8 @@ then
 		else	write_well "${text_red}NOK${text_default}\\n"
 				exit 1
 		fi
+
+		sleep .5
 
 		echo 
 		write_well "[${text_green}OK${text_default}]  secur3asY installation succeeded ! :)"
@@ -207,6 +220,10 @@ else
 
 		if [ ! -d "$LOG_PATH" ]
 		then    mkdir -p "$LOG_PATH"
+		fi
+
+		if [ ! -d "$TMP_PATH" ]
+		then    mkdir -p "$TMP_PATH"
 		fi
 
 		if [ ! -d "$SCRIPTS_PATH" ]
