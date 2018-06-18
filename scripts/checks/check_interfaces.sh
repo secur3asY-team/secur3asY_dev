@@ -37,13 +37,13 @@ write_well_without_return () {
 }
 
 # Removes temporary file and creates the template
-if [ -e "$conf_location/network.conf" ]
-then	rm "$conf_location/network.conf"
+if [ -e "$conf_location/interfaces.conf" ]
+then	rm "$conf_location/interfaces.conf"
 fi
 {
 	printf "# --- secur3asy network configuration file ---\\n";
 	echo;
-} > "$conf_location/network.conf"
+} > "$conf_location/interfaces.conf"
 
 declare -a ips
 declare -a macs
@@ -52,7 +52,7 @@ declare -a interfaces_types
 write_well_without_return "Checking interfaces... "
 
 # Stores all pertinent interfaces names from ifconfig into a string (tab of words) 
-interfaces_tab=$(ifconfig|grep -v "lo:"|grep ": "|awk -F ":" '{print $1}')
+interfaces_tab=$(ifconfig -a|grep -v "lo:"|grep ": "|awk -F ":" '{print $1}')
 if [ $? -eq 0 ]
 then	write_well "${text_green}OK${text_default}\\n"
 		nbint=$(echo $interfaces_tab|wc -w)
@@ -84,6 +84,7 @@ do
 		printf "ip_address=%s\\n" ${ips[$i]};
 		printf "mac_address=%s\\n" ${macs[$i]};
 		echo
-	} >> "$conf_location/network.conf" 
+	} >> "$conf_location/interfaces.conf" 
 	i=$((i+1))
 done
+exit 0

@@ -14,6 +14,7 @@ text_yellow="\033[33;1m"
 text_blue="\033[34;1m"
 
 checks_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../checks && pwd)"
+bin_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../../bin && pwd)"
 
 write_well () {
 		for i in $(seq 1 ${#1});
@@ -63,8 +64,21 @@ write_well "[${text_green}-${text_default}]  Of course, it's possible ! ;)\\n"
 sleep .5
 echo
 bash $checks_location/check_interfaces.sh
-$checks_location/check_rogue_interfaces
+if [ $? -ne 0 ]
+then    exit 1
+fi
+$bin_location/check_rogue_interfaces
+if [ $? -ne 0 ]
+then    exit 1
+fi
 bash $checks_location/check_nearby_networks.sh
+if [ $? -ne 0 ]
+then    exit 1
+fi
+$bin_location/find_relevants_aps
+if [ $? -ne 0 ]
+then    exit 1
+fi
 echo
 echo "----------------------------------------------------"
 exit 0

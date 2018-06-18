@@ -67,6 +67,7 @@ fi
 if [ ! -f "$SECUR3ASY_CONF_PATH" ]
 then
 		SECUR3ASY_DEFAULT_PATH=/opt/secur3asY
+		BIN_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/bin
 		CONF_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/conf
 		LOG_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/log
 		SCRIPTS_DEFAULT_PATH=$SECUR3ASY_DEFAULT_PATH/scripts
@@ -78,6 +79,7 @@ then
 				printf "SECUR3ASY_PATH=%s\\n" $SECUR3ASY_DEFAULT_PATH;
 				echo;
 				printf "# Edit these lines to change manually cache folders location.\\n";
+				printf "BIN_PATH=%s\\n" $BIN_DEFAULT_PATH;
 				printf "CONF_PATH=%s\\n" $CONF_DEFAULT_PATH;
 				printf "LOG_PATH=%s\\n" $LOG_DEFAULT_PATH;
 				printf "SCRIPTS_PATH=%s\\n" $SCRIPTS_DEFAULT_PATH;
@@ -120,6 +122,7 @@ then
 								read -p " " choice2
 								case $choice2 in
 								'O'|'o'|'y'|'Y')  
+										NEW_BIN_PATH=$NEW_SECUR3ASY_PATH/bin																					
 										NEW_CONF_PATH=$NEW_SECUR3ASY_PATH/conf
 										NEW_LOG_PATH=$NEW_SECUR3ASY_PATH/log
 										NEW_SCRIPTS_PATH=$NEW_SECUR3ASY_PATH/scripts
@@ -133,6 +136,7 @@ then
 											printf "SECUR3ASY_PATH=%s" $NEW_SECUR3ASY_PATH;
 											echo;
 											printf "# Edit these lines to change manually cache folders location.\\n";
+											printf "BIN_PATH=%s" $NEW_BIN_PATH;
 											printf "CONF_PATH=%s" $NEW_CONF_PATH;
 											printf "LOG_PATH=%s" $NEW_LOG_PATH;
 											printf "SCRIPTS_PATH=%s" $NEW_SCRIPTS_PATH;
@@ -154,7 +158,7 @@ then
 
 		echo
 		write_well_without_return "Creating secur3asY folders... "
-		mkdir -p "$SECUR3ASY_PATH" && mkdir -p "$LOG_PATH" && mkdir "$TMP_PATH" && chown -R root:root "$SECUR3ASY_PATH" && chmod -R 770 "$SECUR3ASY_PATH"
+		mkdir -p "$SECUR3ASY_PATH" && mkdir -p "$BIN_PATH" && mkdir -p "$LOG_PATH" && mkdir "$TMP_PATH" && chown -R root:root "$SECUR3ASY_PATH" && chmod -R 770 "$SECUR3ASY_PATH"
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"
@@ -174,7 +178,8 @@ then
 		sleep .5
 
 		write_well_without_return "Compiling source-codes... "
-		gcc -Os -I /usr/include/python3.5m -o $SCRIPTS_PATH/checks/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c -lpython3.5m -lpthread -lm -lutil -ldl
+		gcc -Os -I /usr/include/python3.5m -o $BIN_PATH/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c -lpython3.5m -lpthread -lm -lutil -ldl
+		gcc -Os -I /usr/include/python3.5m -o $BIN_PATH/find_relevants_aps $ACTUAL_SOURCES_PATH/find_relevants_aps.c -lpython3.5m -lpthread -lm -lutil -ldl
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"

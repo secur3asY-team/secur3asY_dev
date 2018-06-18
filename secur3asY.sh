@@ -62,8 +62,8 @@ else
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
-	else	write_well "[${text_red}!${text_default}] Missing ressource : check_installation.sh.\n"
-			write_well "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+	else	write_well "[${text_red}!${text_default}]  Missing ressource : check_installation.sh.\n"
+			write_well "[${text_yellow}-${text_default}]  Please clone again secur3asY repository.\n"
 			exit 1
 	fi
 
@@ -72,8 +72,8 @@ else
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
-	else    write_well "[${text_red}!${text_default}] Missing ressource : check_dependancies.sh.\n"
-        	write_well "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+	else    write_well "[${text_red}!${text_default}]  Missing ressource : check_dependancies.sh.\n"
+        	write_well "[${text_yellow}-${text_default}]  Please clone again secur3asY repository.\n"
         	exit 1
 	fi
 
@@ -82,8 +82,8 @@ else
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
-	else	write_well "[${text_red}!${text_default}] Missing ressource : check_interfaces.sh.\n"
-            write_well "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+	else	write_well "[${text_red}!${text_default}]  Missing ressource : check_interfaces.sh.\n"
+            write_well "[${text_yellow}-${text_default}]  Please clone again secur3asY repository.\n"
 			exit 1
 	fi
 
@@ -92,8 +92,8 @@ else
 			if [ $? -ne 0 ]
 			then 	exit 1
 			fi
-	else    write_well "[${text_red}!${text_default}] Missing ressource : secur3asY_menu.sh.\n"
-			write_well "[${text_yellow}-${text_default}] Please clone again secur3asY repository.\n"
+	else    write_well "[${text_red}!${text_default}]  Missing ressource : secur3asY_menu.sh.\n"
+			write_well "[${text_yellow}-${text_default}]  Please clone again secur3asY repository.\n"
 			exit 1
 	fi
 	exit 0

@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 current_path = os.path.abspath(os.path.dirname(sys.argv[0]))
-secur3asY_path = os.path.dirname(os.path.dirname(current_path))
+secur3asY_path = os.path.dirname(current_path)
 conf_path = secur3asY_path + "/conf"
 tmp_path = secur3asY_path + "/tmp"
 
@@ -32,7 +32,7 @@ def read_config_file():
 
     try:
         config = configparser.ConfigParser()
-        config_file = conf_path + "/network.conf"
+        config_file = conf_path + "/interfaces.conf"
         config.read(config_file)
         return config
     except(IOError):
@@ -121,7 +121,7 @@ for interface_section in config.sections():
             wifi_connected.append(section['interface_name'])
     except:
         print("\033[31;1mNOK\033[0m")
-        print("[\033[31;1mx\033[0;m]  Error : unable to counting interfaces types and availabilities.")
+        print("[\033[31;1mx\033[0;m]  Error : unable to count interfaces types and availabilities.")
         sys.exit(1)
 
 print("\033[32;1mOK\033[0m")
@@ -132,14 +132,14 @@ time.sleep(.1)
 #               wifi_connected,
 #               wifi_disconnected
 #
-# @writes:      matching_interfaces_config.txt
+# @writes:      matching_interfaces.txt
 #   
 #   According to the number of interfaces in each category,
 #   determines if the current network hardware configuration
 #   is able to support Rogue AP attacks, and if applicable, 
 #   writes all possible combinations to a temporary file.
 
-result_file = open(tmp_path + "/matching_interfaces_config.txt","w") 
+result_file = open(tmp_path + "/matching_interfaces.txt","w") 
 
 write_well_without_return("Detecting potential configurations... ")
 
@@ -165,7 +165,7 @@ result_file.close()
 print("\033[32;1mOK\033[0m")
 print("")
 
-matching_config = open(tmp_path + "/matching_interfaces_config.txt","r")
+matching_config = open(tmp_path + "/matching_interfaces.txt","r")
 nb_lines = 0; matches = []
 for line in matching_config:
     nb_lines += 1
