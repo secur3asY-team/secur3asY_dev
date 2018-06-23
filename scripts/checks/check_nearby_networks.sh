@@ -34,7 +34,7 @@ aps_detection () {
         fi
         {
                 printf "# --- secur3asy nearby Wi-Fi access-points file ---\\n";
-                echo;
+                printf "\\n"
         } > "$tmp_location/nearby_aps.conf"
         chmod 750 "$tmp_location/nearby_aps.conf"
 
@@ -52,7 +52,7 @@ aps_detection () {
                 ap_beacons=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "10" -)
                 ap_ivs=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "11" -)
                 ap_id_length=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "13" -)
-                ap_essid=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "14" -)
+                ap_essid=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "14" - | iconv -f ISO-8859-1 -t UTF-8//TRANSLIT)
                 {
                         printf "[$ap_bssid]\\n"; 
                         printf "essid=%s\\n" "$ap_essid";
@@ -66,7 +66,7 @@ aps_detection () {
                         printf "beacons=%s\\n" "$ap_beacons";
                         printf "ivs=%s\\n" "$ap_ivs";
                         printf "id_length=%s\\n" "$ap_id_length";
-                        echo
+                        printf "\\n"
                 } >> "$tmp_location/nearby_aps.conf" 
         done
         #rm "$tmp_location/aps.csv"
@@ -108,7 +108,7 @@ stations_detection () {
         fi
         {
                 printf "# --- secur3asy nearby Wi-Fi stations file ---\\n";
-                echo
+                printf "\\n"
         } > "$tmp_location/nearby_stations.conf"
         chmod 750 "$tmp_location/nearby_stations.conf"
 
@@ -120,7 +120,7 @@ stations_detection () {
                 station_power=$(printf "$stations_csv" | head -n $i | tail -n 1 | csvtool -t "," col "4" -)
                 station_packets=$(printf "$stations_csv" | head -n $i | tail -n 1 | csvtool -t "," col "5" -)
                 station_bssid=$(printf "$stations_csv" | head -n $i | tail -n 1 | csvtool -t "," col "6" -)
-                station_probed_essid=$(printf "$stations_csv" | head -n $i | tail -n 1 | csvtool -t "," col "7" -)
+                station_probed_essid=$(printf "$stations_csv" | head -n $i | tail -n 1 | csvtool -t "," col "7" - | iconv -f ISO-8859-1 -t UTF-8//TRANSLIT)
                 {
                         printf "[$station_mac]\\n"; 
                         printf "probed_essid=%s\\n" "$station_probed_essid";
@@ -128,7 +128,7 @@ stations_detection () {
                         printf "bssid=%s\\n" "$station_bssid";
                         printf "power=%s\\n" "$station_power";
                         printf "packets=%s\\n" "$station_packets";
-                        echo
+                        printf "\\n"
                 } >> "$tmp_location/nearby_stations.conf"
                 sleep .01
         done
