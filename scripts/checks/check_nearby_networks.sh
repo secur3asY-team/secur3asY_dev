@@ -53,6 +53,15 @@ aps_detection () {
                 ap_ivs=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "11" -)
                 ap_id_length=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "13" -)
                 ap_essid=$(printf "$aps_csv" | head -n $i | tail -n 1 | csvtool -t "," col "14" - | iconv -f ISO-8859-1 -t UTF-8//TRANSLIT)
+                wps_line=$(cat "$tmp_location/wps_capture"|grep $ap_bssid)
+                if [ $? -eq 0 ]
+                then    wps_status=$(echo "$wps_line" | awk -F " " '{print $5}')
+                        if [ "$wps_status" == "No" ]
+                        then    ap_wps="yes"
+                        else    ap_wps="no"
+                        fi
+                else    ap_wps="no"
+                fi
                 {
                         printf "[$ap_bssid]\\n"; 
                         printf "essid=%s\\n" "$ap_essid";
@@ -66,6 +75,7 @@ aps_detection () {
                         printf "beacons=%s\\n" "$ap_beacons";
                         printf "ivs=%s\\n" "$ap_ivs";
                         printf "id_length=%s\\n" "$ap_id_length";
+                        printf "wps=%s\\n" "$ap_wps";
                         printf "\\n"
                 } >> "$tmp_location/nearby_aps.conf" 
         done
@@ -169,8 +179,9 @@ case $choice in
                 sleep 2
                 exit 1
         else    printf "${text_green}OK${text_default}\\n"        
-                write_well_without_return "Listening for 30 seconds the surrounding Wi-Fi networks... Please wait... "
-                timeout 30 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon" --title "Listening for 30 seconds the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1
+                write_well_without_return "Listening for 40 seconds the surrounding Wi-Fi networks... Please wait... "
+                timeout 40 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon" --title "Listening for 40s the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1 &
+                timeout 40 wash -i wlan0mon --ignore-fcs -o $tmp_location/wps_capture > /dev/null 2>&1
                 printf "${text_green}OK${text_default}\\n"
                 split_csv
                 write_well_without_return "Detecting access-points... "

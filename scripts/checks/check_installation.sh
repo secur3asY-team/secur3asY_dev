@@ -11,6 +11,19 @@ text_green="\033[32;1m"
 text_yellow="\033[33;1m"
 text_blue="\033[34;1m"
 
+check_os () {
+
+	home_url=$(cat /etc/os-release|grep HOME_URL|cut -d '=' -f2|cut -d '"' -f2)
+	case $home_url in
+		'https://www.debian.org/')
+			return 1;;
+		'https://www.ubuntu.com/')
+			return 2;;
+		'https://www.kali.org/')
+			return 3;;
+	esac
+}
+
 # @procedure:   write_well()
 # @args:		string
 # @role:        Writes custom-like console output
@@ -55,6 +68,14 @@ ACTUAL_SCRIPTS_PATH="$ACTUAL_PATH/scripts"
 ACTUAL_SOURCES_PATH="$ACTUAL_PATH/sources"
 ACTUAL_TMP_PATH="$ACTUAL_PATH/tmp"
 SECUR3ASY_CONF_PATH="$ACTUAL_CONF_PATH/secur3asY.conf"
+check_os
+os_type=$?
+if [ $os_type -eq 1 ]
+then 	py_include_path=('/usr/include/python3.5m')
+		lpython=('-lpython3.5m')
+else 	py_include_path=('/usr/include/python3.6m')
+		lpython=('-lpython3.6m')
+fi
 
 # secur3asY configuration file generation for first install
 
@@ -178,8 +199,8 @@ then
 		sleep .5
 
 		write_well_without_return "Compiling source-codes... "
-		gcc -Os -I /usr/include/python3.5m -o $BIN_PATH/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c -lpython3.5m -lpthread -lm -lutil -ldl
-		gcc -Os -I /usr/include/python3.5m -o $BIN_PATH/find_relevants_aps $ACTUAL_SOURCES_PATH/find_relevants_aps.c -lpython3.5m -lpthread -lm -lutil -ldl
+		gcc -Os -I $py_include_path -o $BIN_PATH/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c $lpython -lpthread -lm -lutil -ldl
+		gcc -Os -I $py_include_path -o $BIN_PATH/find_relevants_aps $ACTUAL_SOURCES_PATH/find_relevants_aps.c $lpython -lpthread -lm -lutil -ldl
 		if [ $? -eq 0 ]
 		then	write_well "${text_green}OK${text_default}\\n"
 		else	write_well "${text_red}NOK${text_default}\\n"

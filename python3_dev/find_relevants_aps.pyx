@@ -39,6 +39,7 @@ class AccessPoint:
         self.beacons = None
         self.ivs = None
         self.id_length = None
+        self.wps = None
         self.nb_stations = None
         self.score = None
     
@@ -75,6 +76,9 @@ class AccessPoint:
     
     def get_id_length(self):
         return self.id_length
+    
+    def get_wps(self):
+        return self.wps
 
     def get_nb_stations(self):
         return self.nb_stations
@@ -116,6 +120,9 @@ class AccessPoint:
     def set_id_length(self, id_length):
         self.id_length = id_length
 
+    def set_wps(self, wps):
+        self.wps = wps
+
     def set_nb_stations(self, nb_stations):
         self.nb_stations = nb_stations
 
@@ -147,6 +154,7 @@ def access_points_scorer(aps_config, stations_config, access_points):
             access_point.set_beacons((int)(ap_cur_section['beacons']))
             access_point.set_ivs((int)(ap_cur_section['ivs']))
             access_point.set_id_length((int)(ap_cur_section['id_length']))
+            access_point.set_wps(ap_cur_section['wps'])
             i = 0
             for station_section in stations_config.sections():
                 station_cur_section=stations_config[station_section]
@@ -154,6 +162,16 @@ def access_points_scorer(aps_config, stations_config, access_points):
                     i += 1
             access_point.set_nb_stations(i)
             access_point.set_score((access_point.get_beacons()) + (access_point.get_ivs() * 4) + (access_point.get_nb_stations() * 10))
+            if access_point.get_wps() == "yes":
+                access_point.set_score(access_point.get_score() + 500)
+            if access_point.get_privacy() == "WEP":
+                access_point.set_score(access_point.get_score() + 300)
+            elif access_point.get_privacy() == "WPA":
+                access_point.set_score(access_point.get_score() + 200)
+            elif access_point.get_privacy() == "WPA2":
+                access_point.set_score(access_point.get_score() + 100)
+            else:
+                access_point.set_score(access_point.get_score() + 100)
             access_points.append(access_point)
         except configparser.Error, err:
             print("Cannot parse configuration file. %s" %err)
@@ -194,6 +212,8 @@ def top_ten_generator(top_ten_filepath, access_points):
                 'essid': access_points[ref_index].get_essid(),
                 'beacons': access_points[ref_index].get_beacons(),
                 'ivs': access_points[ref_index].get_ivs(),
+                'privacy': access_points[ref_index].get_privacy(),
+                'wps': access_points[ref_index].get_wps(),
                 'nb_stations': access_points[ref_index].get_nb_stations(),
                 'nb_points': access_points[ref_index].get_score()
             }

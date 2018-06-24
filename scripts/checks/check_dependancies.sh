@@ -54,7 +54,7 @@ write_well_without_return () {
 		done
 }
 
-declare -a dependancies=(aircrack-ng crunch csvtool dnsmasq gcc hostapd macchanger net-tools python3 python3-dev python3-all-dev python3-pip wireless-tools)
+declare -a dependancies=(aircrack-ng crunch csvtool dnsmasq gcc hostapd macchanger net-tools python3 python3-dev python3-all-dev python3-pip reaver wireless-tools)
 check_os
 os_type=$?
 
