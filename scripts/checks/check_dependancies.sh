@@ -98,7 +98,8 @@ then
 						if [ $? -eq 0 ]
 						then
 								write_well "${text_green}OK${text_default}\n"
-								for packet in "${!needed_packets[@]}" ; do
+								for packet in "${!needed_packets[@]}" ; 
+								do
 										write_well_without_return "[${text_green}+${text_default}]  ${needed_packets[$packet]} installation... "
 										apt -y install ${needed_packets[$packet]} > /dev/null 2>&1
 										if [ $? -eq 0 ]

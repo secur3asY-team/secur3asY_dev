@@ -179,9 +179,9 @@ case $choice in
                 sleep 2
                 exit 1
         else    printf "${text_green}OK${text_default}\\n"        
-                write_well_without_return "Listening for 40 seconds the surrounding Wi-Fi networks... Please wait... "
-                timeout 40 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon" --title "Listening for 40s the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1 &
-                timeout 40 wash -i wlan0mon --ignore-fcs -o $tmp_location/wps_capture > /dev/null 2>&1
+                write_well_without_return "Listening for 1 minute the surrounding Wi-Fi networks... Please wait... "
+                timeout 60 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon" --title "Listening for 1 minute the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1 &
+                timeout 60 wash -i wlan0mon --ignore-fcs -o $tmp_location/wps_capture > /dev/null 2>&1
                 printf "${text_green}OK${text_default}\\n"
                 split_csv
                 write_well_without_return "Detecting access-points... "

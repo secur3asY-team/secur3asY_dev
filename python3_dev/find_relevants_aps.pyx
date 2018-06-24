@@ -23,6 +23,7 @@ conf_path = secur3asY_path + "/conf"
 tmp_path = secur3asY_path + "/tmp"
 aps_config_file = tmp_path + "/nearby_aps.conf"
 stations_config_file = tmp_path + "/nearby_stations.conf"
+ranking_file = tmp_path + "/ranked_aps.conf"
 top_ten_file = tmp_path + "/top_ten_aps.conf"
 
 class AccessPoint:
@@ -161,7 +162,7 @@ def access_points_scorer(aps_config, stations_config, access_points):
                 if station_cur_section['bssid'] == access_point.get_bssid():
                     i += 1
             access_point.set_nb_stations(i)
-            access_point.set_score((access_point.get_beacons()) + (access_point.get_ivs() * 4) + (access_point.get_nb_stations() * 10))
+            access_point.set_score((access_point.get_beacons() * 4) + (access_point.get_ivs() * 5) + (access_point.get_nb_stations() * 50))
             if access_point.get_wps() == "yes":
                 access_point.set_score(access_point.get_score() + 500)
             if access_point.get_privacy() == "WEP":
@@ -173,31 +174,35 @@ def access_points_scorer(aps_config, stations_config, access_points):
             else:
                 access_point.set_score(access_point.get_score() + 100)
             access_points.append(access_point)
-        except configparser.Error, err:
-            print("Cannot parse configuration file. %s" %err)
-            print("[\033[31;1mx\033[0;m]  Error : unable to count interfaces types and availabilities.")
+        except:
+            print("\033[31;1mNOK\033[0m")
+            print("[\033[31;1mx\033[0;m]  Error : unable to score access-points.\n")
+            time.sleep(2)
             sys.exit(1)
 
-def read_conf_file(file):
-    try:
-        config = configparser.ConfigParser()
-        config.read(file)
-        return config
-    except(IOError):
-        print("[\033[31;1mx\033[0;m]  Error : unable to find " + file + " !\n")
-        sys.exit(1)
+def count_aps(aps_config):
+    count = 0
+    for ap_section in aps_config.sections():
+        count += 1
+    return count
 
-def top_ten_generator(top_ten_filepath, access_points):
+def ranking_generator(filepath, aps_config, stations_config, access_points, nb_access_points):
 
-    #   Loop 10 times :
+    #   Scores all access-points detected by Airodump-ng
+    #   Loops [nb_access_points] times :
     #       - Initializes ref_score and ref_index to 0
     #       - For each AccessPoint object in access-points list :
     #           - If current access-point's score is greater than ref_score, save its index and score. 
-    #       - Adds new section to top_ten_config taggued with AP's BSSID and its scores.
+    #       - Adds new section to ranking_config taggued with AP's BSSID and its scores.
     #       - Deletes the AccessPoint object to the access-points list
+    #   Writes ranking_config to filepath 
 
-    top_ten_config = configparser.ConfigParser()
-    for i in range(0, 10):
+    # Assigning a score to each access point
+    access_points_scorer(aps_config, stations_config, access_points)
+    time.sleep(1)
+
+    ranking_config = configparser.ConfigParser()
+    for i in range(0, nb_access_points):
         j = 0
         ref_score = 0
         ref_index = 0
@@ -207,7 +212,7 @@ def top_ten_generator(top_ten_filepath, access_points):
                 ref_index = j
             j += 1 
         try:
-            top_ten_config[access_points[ref_index].get_bssid()] = {   
+            ranking_config[access_points[ref_index].get_bssid()] = {   
                 'bssid': access_points[ref_index].get_bssid(),
                 'essid': access_points[ref_index].get_essid(),
                 'beacons': access_points[ref_index].get_beacons(),
@@ -220,12 +225,57 @@ def top_ten_generator(top_ten_filepath, access_points):
             del access_points[ref_index]
         except:
             print("\033[31;1mNOK\033[0m")
-            print("[\033[31;1mx\033[0;m]  Error : unable to find relevant access-points.")
+            print("[\033[31;1mx\033[0;m]  Error : unable to generate the top " + nb_access_points + " relevants access-points file.\n")
+            time.sleep(2)
             sys.exit(1)
 
-    top_ten_file = open(top_ten_filepath, 'w')
-    top_ten_config.write(top_ten_file)
-    top_ten_file.close()
+    ranking_file = open(filepath, 'w')
+    ranking_config.write(ranking_file)
+    ranking_file.close()
+
+def ranking_printer(file):
+    ranking_config = configparser.ConfigParser()
+    ranking_config.read(file)
+    nb_ranked_aps = count_aps(ranking_config)
+    counter = 1
+    print("       \033[31;1m[ --- Top " + (str)(nb_ranked_aps) + " access-points  --- ]\033[0m\n")
+    for ap_section in ranking_config.sections():
+        cur_section = ranking_config[ap_section]
+        cur_essid = cur_section['essid']
+        cur_bssid = cur_section["bssid"]
+        cur_privacy = cur_section["privacy"]
+        cur_nb_stations = (str)(cur_section["nb_stations"])
+        cur_ap_points = cur_section["nb_points"]
+        cur_beacons = (str)(cur_section["beacons"])
+        cur_ivs = (str)(cur_section["ivs"])
+        cur_wps = cur_section["wps"]
+        if (int)(cur_ap_points) < 260:
+            cur_ap_points = "\033[31;1m" + cur_ap_points
+        elif (int)(cur_ap_points) < 400: 
+            cur_ap_points = "\033[33;1m " + cur_ap_points
+        else: 
+            cur_ap_points = "\033[32;1m" + cur_ap_points
+        
+        if cur_wps == "yes":
+            cur_wps = "\033[32;1mYes\033[0m"
+        else:
+            cur_wps = "\033[31;1mNo\033[0m"
+
+        print("[\033[31;1m" + (str)(counter) + "\033[0m]  \033[1m" + cur_essid + "\033[0m (" + cur_bssid + ") - " + cur_ap_points + " points\033[0m")
+        print("     Privacy : \033[1m" + cur_privacy + "\033[0m - Connected stations : \033[1m" + cur_nb_stations + "\033[0m - Beacons : \033[1m" + cur_beacons + "\033[0m - IVS : \033[1m" + cur_ivs + "\033[0m")
+        print("     WPS Vulnerable : " + cur_wps + "\n")
+        counter += 1
+
+def read_conf_file(file):
+    try:
+        config = configparser.ConfigParser()
+        config.read(file)
+        return config
+    except(IOError):
+        print("\033[31;1mNOK\033[0m")
+        print("[\033[31;1mx\033[0m]  Error : unable to find " + file + " !\n")
+        time.sleep(2)
+        sys.exit(1)
 
 def write_well(given_string):
     try:
@@ -266,6 +316,7 @@ def main():
     # Reads parsed aps configuration file values into aps_config
     write_well_without_return("Reading access-points configuration file... ")
     aps_config = read_conf_file(aps_config_file)
+    nb_access_points = count_aps(aps_config)
     print("\033[32;1mOK\033[0m")
     time.sleep(.1)
 
@@ -275,18 +326,25 @@ def main():
     print("\033[32;1mOK\033[0m\n")
     time.sleep(.1)
 
-    write_well_without_return("I'm looking for the 10 most relevant access points to spoof... ")
-
-    # Assigning a score to each access point
-    access_points_scorer(aps_config, stations_config, access_points)
-    time.sleep(1)
-
-    # Definition of the top 10 most relevant access points
-    top_ten_generator(top_ten_file, access_points)
-    time.sleep(1)
-
+    write_well_without_return("I'm ranking all detected access points... ")
+    
+    # Ranks all access points
+    ranking_generator(ranking_file, aps_config, stations_config, access_points, nb_access_points)
+    time.sleep(.5)
     print("\033[32;1mOK\033[0m")
     time.sleep(.1)
+
+    write_well_without_return("I'm looking for the 10 most relevant access points to spoof... ")
+
+    # Definition of the top 10 most relevant access points
+    ranking_generator(top_ten_file, aps_config, stations_config, access_points, 10)
+    time.sleep(.5)
+    print("\033[32;1mOK\033[0m\n")
+    time.sleep(.1)
+
+
+    ranking_printer(top_ten_file)
+    ranking_printer(ranking_file)
 
 if __name__ == "__main__":
     main()
