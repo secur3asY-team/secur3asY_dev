@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # @author : 		Aastrom
-# @lastUpdate :		2018-03-22
+# @lastUpdate :		2018-07-01
 # @role :			Check secur3asY installation
 
 text_default="\033[0m"
@@ -10,6 +10,13 @@ text_red="\033[31;1m"
 text_green="\033[32;1m"
 text_yellow="\033[33;1m"
 text_blue="\033[34;1m"
+
+ACTUAL_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+ACTUAL_CONF_PATH="$ACTUAL_PATH/conf"
+ACTUAL_SCRIPTS_PATH="$ACTUAL_PATH/scripts"
+ACTUAL_SOURCES_PATH="$ACTUAL_PATH/sources"
+ACTUAL_TMP_PATH="$ACTUAL_PATH/tmp"
+SECUR3ASY_CONF_PATH="$ACTUAL_CONF_PATH/secur3asY.conf"
 
 check_os () {
 
@@ -22,6 +29,36 @@ check_os () {
 		'https://www.kali.org/')
 			return 3;;
 	esac
+}
+
+check_os
+os_type=$?
+if [ $os_type -eq 1 ]
+then 	py_include_path=('/usr/include/python3.5m')
+		source_files_ext=('*-3.5m.c')
+		lpython=('-lpython3.5m')
+else 	py_include_path=('/usr/include/python3.6m')
+		source_files_ext=('*-3.6m.c')
+		lpython=('-lpython3.6m')
+fi
+
+compile_sources_files () {
+
+	find "$ACTUAL_SOURCES_PATH" -type f -name $source_files_ext | while read LINE
+	do
+		src_file=`echo "$LINE"`
+		dest_file_with_version=$(basename "${src_file%.*}")
+		dest_file=$(echo "$dest_file_with_version" | cut -d "-" -f1)
+		printf " - $dest_file... "
+		gcc -Os -I $py_include_path -o $BIN_PATH/$dest_file $src_file $lpython -lpthread -lm -lutil -ldl
+		if [ $? -ne 0 ]
+		then 	write_well "${text_red}NOK${text_default}"
+				write_well "[${text_red}x${text_default}]  Error occurred when compiling $LINE.\\n"
+				exit 1
+		else	write_well "${text_green}OK${text_default}"
+		fi
+	done
+	echo
 }
 
 # @procedure:   write_well()
@@ -61,21 +98,6 @@ write_well_without_return () {
 				sleep .002
 		done
 }
-
-ACTUAL_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
-ACTUAL_CONF_PATH="$ACTUAL_PATH/conf"
-ACTUAL_SCRIPTS_PATH="$ACTUAL_PATH/scripts"
-ACTUAL_SOURCES_PATH="$ACTUAL_PATH/sources"
-ACTUAL_TMP_PATH="$ACTUAL_PATH/tmp"
-SECUR3ASY_CONF_PATH="$ACTUAL_CONF_PATH/secur3asY.conf"
-check_os
-os_type=$?
-if [ $os_type -eq 1 ]
-then 	py_include_path=('/usr/include/python3.5m')
-		lpython=('-lpython3.5m')
-else 	py_include_path=('/usr/include/python3.6m')
-		lpython=('-lpython3.6m')
-fi
 
 # secur3asY configuration file generation for first install
 
@@ -198,14 +220,8 @@ then
 
 		sleep .5
 
-		write_well_without_return "Compiling source-codes... "
-		gcc -Os -I $py_include_path -o $BIN_PATH/check_rogue_interfaces $ACTUAL_SOURCES_PATH/check_rogue_interfaces.c $lpython -lpthread -lm -lutil -ldl
-		gcc -Os -I $py_include_path -o $BIN_PATH/find_relevants_aps $ACTUAL_SOURCES_PATH/find_relevants_aps.c $lpython -lpthread -lm -lutil -ldl
-		if [ $? -eq 0 ]
-		then	write_well "${text_green}OK${text_default}\\n"
-		else	write_well "${text_red}NOK${text_default}\\n"
-				exit 1
-		fi
+		write_well "Compiling source-codes... "
+		compile_sources_files
 
 		sleep .5
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # @author :			Aastrom && Dylan
-# @lastUpdate :                 2018-05-29
+# @lastUpdate :                 2018-07-01
 # @role :			Check nearby Wi-Fi access-points and stations for WLAN Intruder and Rogue AP
 
 text_default="\033[0m"
@@ -79,7 +79,7 @@ aps_detection () {
                         printf "\\n"
                 } >> "$tmp_location/nearby_aps.conf" 
         done
-        #rm "$tmp_location/aps.csv"
+        rm "$tmp_location/aps.csv"
         sleep .5
 }
 
@@ -142,7 +142,7 @@ stations_detection () {
                 } >> "$tmp_location/nearby_stations.conf"
                 sleep .01
         done
-        #rm "$tmp_location/stations.csv"
+        rm "$tmp_location/stations.csv"
         sleep .5
 }
 
@@ -180,7 +180,7 @@ case $choice in
                 exit 1
         else    printf "${text_green}OK${text_default}\\n"        
                 write_well_without_return "Listening for 1 minute the surrounding Wi-Fi networks... Please wait... "
-                timeout 60 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon" --title "Listening for 1 minute the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1 &
+                timeout 60 "$current_terminal" -e "airodump-ng -w $tmp_location/rogue_capture --output-format csv wlan0mon --wps" --title "Listening for 1 minute the surrounding Wi-Fi networks... Please wait. " > /dev/null 2>&1 &
                 timeout 60 wash -i wlan0mon --ignore-fcs -o $tmp_location/wps_capture > /dev/null 2>&1
                 printf "${text_green}OK${text_default}\\n"
                 split_csv
@@ -193,11 +193,11 @@ case $choice in
                 exit 0
         fi;;
     'n'|'N'|'no'|'NO'|'non'|'NON')
-        printf "[${text_red}x${text_default}]  You're not ready yet to embark on the great \n     adventure of Wi-Fi attacks! See you next time! ${text_green}:)${text_default}"
+        printf "[${text_red}x${text_default}]  You're not ready yet to embark on the great \n     adventure of Wi-Fi attacks! See you next time! ${text_green}:)${text_default}\\n"
         sleep 2
         exit 1;;
     *)
-        printf "[${text_red}x${text_default}]  You're not ready yet to embark on the great \n     adventure of Wi-Fi attacks! See you next time! ${text_green}:)${text_default}"
+        printf "[${text_red}x${text_default}]  You're not ready yet to embark on the great \n     adventure of Wi-Fi attacks! See you next time! ${text_green}:)${text_default}\\n"
         sleep 2
         exit 1;;
 esac
