@@ -74,7 +74,7 @@ do
 	else	interfaces_types[$i]="Ethernet"
 	fi
 	{
-		printf "[$interface]\\n"; 
+		printf "[$interface]\\n";
 		printf "interface_name=%s\\n" $interface;
 		printf "interface_type=%s\\n" ${interfaces_types[$i]};
 		if [ "${ips[$i]}" != "" ]

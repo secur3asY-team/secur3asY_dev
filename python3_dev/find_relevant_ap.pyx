@@ -180,7 +180,7 @@ def access_points_scorer(aps_config, stations_config, access_points):
             
             # Setting score depending on WPS vulnerability
             if access_point.get_wps() == "yes":
-                access_point.set_score(access_point.get_score() + 500)
+                access_point.set_score(access_point.get_score() + 300)
 
             # Setting score depending on power    
             if (int)(access_point.get_power()) <= -85:
@@ -250,19 +250,19 @@ def ranking_generator(filepath, aps_config, stations_config, access_points, nb_a
                 ref_score = ap.get_score()
                 ref_index = j
             j += 1 
-        ranking_config[access_points[ref_index].get_bssid()] = { 
-            'id': i,  
-            'bssid': access_points[ref_index].get_bssid(),
-            'essid': access_points[ref_index].get_essid(),
-            'channel': access_points[ref_index].get_channel(),
-            'power': access_points[ref_index].get_power(),
-            'beacons': access_points[ref_index].get_beacons(),
-            'ivs': access_points[ref_index].get_ivs(),
-            'privacy': access_points[ref_index].get_privacy(),
-            'wps': access_points[ref_index].get_wps(),
-            'station': access_points[ref_index].get_station(),
-            'nb_stations': access_points[ref_index].get_nb_stations(),
-            'nb_points': access_points[ref_index].get_score()
+        ranking_config[(str)(access_points[ref_index].get_bssid())] = { 
+            'id': (str)(i),  
+            'bssid': (str)(access_points[ref_index].get_bssid()),
+            'essid': (str)(access_points[ref_index].get_essid()),
+            'channel': (str)(access_points[ref_index].get_channel()),
+            'power': (str)(access_points[ref_index].get_power()),
+            'beacons': (str)(access_points[ref_index].get_beacons()),
+            'ivs': (str)(access_points[ref_index].get_ivs()),
+            'privacy': (str)(access_points[ref_index].get_privacy()),
+            'wps': (str)(access_points[ref_index].get_wps()),
+            'station': (str)(access_points[ref_index].get_station()),
+            'nb_stations': (str)(access_points[ref_index].get_nb_stations()),
+            'nb_points': (str)(access_points[ref_index].get_score())
         }
         del access_points[ref_index]
 
@@ -311,7 +311,7 @@ def ranking_printer(file):
 
         print("[\033[31;1m" + (str)(counter) + "\033[0m]  \033[1m" + cur_essid + "\033[0m (" + cur_bssid + ") - " + cur_ap_points + " points")
         print("     Privacy : \033[1m" + cur_privacy + "\033[0m - Connected stations : \033[1m" + cur_nb_stations + "\033[0m - Beacons : \033[1m" + cur_beacons + "\033[0m - IVS : \033[1m" + cur_ivs + "\033[0m")
-        print("     WPS Vulnerable : " + cur_wps + " - Power : " + cur_power + "\n")
+        print("     WPS Enabled : " + cur_wps + " - Power : " + cur_power + "\n")
         counter += 1
         time.sleep(.01)
 
@@ -342,12 +342,12 @@ def show_menu(nb_access_points):
     section = None
     ranking_printer(top_ten_file)
     print("[\033[1m0\033[0m] Show me all access-points please ! :)\n")
-    s = (int)(input("What's your choice ? --> "))
+    s = (int)(input("###  Select your target --> "))
     print("")
     if s == 0:
         ranking_printer(ranking_file)
         print("[\033[1m0\033[0m] Show me the top-ten access-points please ! :)\n")
-        u = (int)(input("Select your target --> "))
+        u = (int)(input("###  Select your target --> "))
         print("")
         if u == 0:
             show_menu(nb_access_points)
